@@ -1,7 +1,5 @@
 require 'drb/drb'
 
-
-
 URI="druby://localhost:8787"
 
 class HashServer

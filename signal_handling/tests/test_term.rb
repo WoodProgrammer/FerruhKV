@@ -1,13 +1,10 @@
-trap('INT') do #if user have keyboard interrupt
+log_file = File.open("log.log","a")
+trap('TERM') do
     puts 'Exiting...'
+    log_file.write("Hoo")
     exit
 end
 i = 0
 loop do
 	i += 1
-end
-
-trap('TERM') do #if instance is down
-    puts 'Term Incoming ..'
-    exit
 end
