@@ -1,31 +1,55 @@
-require 'drb/drb'
-
-URI="druby://localhost:8788"
-
+require 'socket'
+require 'json'
+$hash = {}
 class HashServer
-    def initialize
-        @@user_hashes = {}
-    end
-    def set_data_to_hash(user_hash,card_number)
-        p "Hashed "
-        @@user_hashes[user_hash] = card_number
-        return @@user_hashes
-        
-    end
+  def initialize(rescue_hosts)
+    @@rescue_hosts = rescue_hosts
+   
+  end
 
+  def set_to_hash(k,v)
+    $hash[k] = v
+  end
 
-    def rescue_handling(rescue_hash)
-        p rescue_hash
-        rescue_hash.map {|key, val| @@user_hashes[key]=val }
-        puts "Rescue Process Finished"
-        puts @@user_hashes
-    end
+  def get_hash
+    return $hash
+  end
 
+  def rescue_server
+    host,port = @@rescue_hosts.split(":")
+    
+    s = TCPSocket.open(host, port)
+
+    s.print($hash)
+    s.close
+    
+  end
+  
 end
 
-FRONT_OBJECT=HashServer.new
 
-$SAFE = 1 
+trap('TERM') do
+  log_file = File.open("log.log","a")
+  puts 'Exiting...'
+  log_file.write("Hoo")
+  hash_server_obj4_resc = HashServer.new("127.0.0.1:2001")
+  hash_server_obj4_resc.rescue_server
 
-DRb.start_service(URI, FRONT_OBJECT)
-DRb.thread.join
+  exit
+end
+
+
+
+server = TCPServer.open(2000)
+loop {
+  hash_server_obj4_proc = HashServer.new("127.0.0.1:2001")
+  client = server.accept
+  params = client.gets
+  data = JSON.parse(params)
+
+  data.map {|key, val| hash_server_obj4_proc.set_to_hash(key,val) }
+  p hash_server_obj4_proc.get_hash
+
+}
+
+

@@ -1,19 +1,13 @@
-require 'drb/drb'
+require 'socket'
+require 'json'
 
-def machine_id(card_number, machine_count , user_hash ) 
+host = 'localhost'
+port = 2000
 
-    machine_id = card_number % machine_count
-    return machine_id
-end
+s = TCPSocket.open(host, port)
 
+request = { 'asd2' => 'param2' }.to_json
+s.print(request)
 
-SERVER_URI="druby://localhost:8788"
+s.close
 
-DRb.start_service
-
-hash_server = DRbObject.new_with_uri(SERVER_URI)
-user_hash = "asdadasd"
-card_data = 23123123
-
-
-puts hash_server.set_data_to_hash(user_hash,card_data)
