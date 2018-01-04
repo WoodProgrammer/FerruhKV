@@ -15,6 +15,10 @@ class HashServer
     return $hash
   end
 
+  def get k 
+    return $hash[k]
+  end
+
   def rescue_server
     host,port = @@rescue_hosts.split(":")
     
@@ -46,9 +50,13 @@ loop {
   client = server.accept
   params = client.gets
   data = JSON.parse(params)
-
-  data.map {|key, val| hash_server_obj4_proc.set_to_hash(key,val) }
-  p hash_server_obj4_proc.get_hash
+  
+  if data["get"] == nil
+    data.map {|key, val| hash_server_obj4_proc.set_to_hash(key,val) }
+    p hash_server_obj4_proc.get_hash
+  else
+    p hash_server_obj4_proc.get(data["get"])
+  end
 
 }
 
