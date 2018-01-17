@@ -24,7 +24,7 @@ class HashServer
     
     s = TCPSocket.open(host, port)
 
-    s.print($hash)
+    s.print($hash.to_json)
     s.close
     
   end
@@ -50,7 +50,7 @@ loop {
   client = server.accept
   params = client.gets
   data = JSON.parse(params)
-  
+
   if data["get"] == nil
     data.map {|key, val| hash_server_obj4_proc.set_to_hash(key,val) }
     p hash_server_obj4_proc.get_hash

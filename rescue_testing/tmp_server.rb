@@ -7,9 +7,12 @@ server = TCPServer.open(2001)
 loop {
   client = server.accept
   params = client.gets
-  data = JSON.parse(params)
-  p data
-  data.map {|key, val| main_hash[key]=val }
+  rescue_data = JSON.parse(params)
+  begin
+    rescue_data.map {|key, val| main_hash[key]=val }
+  rescue Exception => e  
+    p e
+  end
 }
 
 

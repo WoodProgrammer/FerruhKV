@@ -13,17 +13,19 @@ def get k
 end
 
 
-def set k , v
-    if k == 'get'
+def set key , value
+    if key == 'get'
         p "Key Error Get is not impossible"
     else
-        request2 = {"#{k}" => "#{v}"}.to_json
-        $s.print(request2)
+        tmp_hash = {}
+        tmp_hash["#{key}"] = "#{key}"
+        
+        $s.print(tmp_hash.to_json)
 
     end
 end
 
-
+set "asdd","asd2"
 
 $s.close
 
